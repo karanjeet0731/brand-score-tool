@@ -1,1 +1,22 @@
+{
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    { "handle": "filesystem" },
+    {
+      "src": "/tools/bg-remover/?",
+      "dest": "/tools/bg-remover.html"
+    },
+    {
+      "src": "/tool/bg-remover.html",
+      "dest": "/tools/bg-remover.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
 
