@@ -753,6 +753,56 @@ nav::after {
 .style-btn:hover, .style-btn.active { border-color: var(--black); color: var(--black); background: var(--off-white); }
 .style-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(255,60,31,0.04); }
 
+.custom-palette-panel {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  gap: 0.8rem;
+  align-items: end;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background: var(--off-white);
+  border: 1px solid var(--gray-light);
+  border-radius: 12px;
+}
+.custom-color-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.custom-color-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.custom-color-input {
+  width: 100%;
+  height: 42px;
+  padding: 0.2rem;
+  border: 1.5px solid var(--gray-light);
+  border-radius: 8px;
+  background: var(--white);
+}
+.custom-color-btn {
+  min-height: 42px;
+  padding: 0.7rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background 0.2s, transform 0.2s;
+}
+.custom-color-btn:hover {
+  background: var(--accent-teal);
+  transform: translateY(-1px);
+}
 .palette-display { display: flex; flex-direction: column; gap: 1rem; }
 .palette-row {
   display: flex;
@@ -1317,6 +1367,10 @@ footer {
   .future-grid { grid-template-columns: 1fr 1fr; }
   .future-card { padding: 1.4rem; }
   .style-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .custom-palette-panel {
+    grid-template-columns: 1fr;
+    padding: 0.9rem;
+  }
   .insights-grid { grid-template-columns: 1fr; }
   .font-pair-info { grid-template-columns: 1fr; }
   .preview-images { grid-template-columns: 1fr; }
@@ -1410,7 +1464,7 @@ footer {
     <ul class="nav-links">
       <li><a href="#tools">Tools</a></li>
       <li><a href="#features">Features</a></li>
-      <li><a href="www.kjscreative.in">Agency</a></li>
+      <li><a href="https://www.kjscreative.in">Agency</a></li>
     </ul>
     <a href="#tools" class="nav-cta">Start Free</a>
   </div>
@@ -1438,7 +1492,7 @@ footer {
       <p class="hero-desc">Brand analysis, color palettes, font pairings, image tools, and AI content — everything founders and creators need, in one platform.</p>
       <div class="hero-actions">
         <a href="#tools" class="btn-primary">Explore Tools →</a>
-        <a href="/" class="btn-secondary">Our Agency</a>
+        <a href="https://www.kjscreative.in" class="btn-secondary">Our Agency</a>
       </div>
     </div>
   </div>
@@ -1660,7 +1714,7 @@ footer {
   <h2 class="cta-title">Need a full<br><span class="italic">brand</span> <span class="accent-word">overhaul?</span></h2>
   <p class="cta-sub">The Toolkit is just the start. Work with our team to build a brand, website, or identity that converts and competes.</p>
   <div class="cta-actions">
-    <a href="/" class="btn-primary">View Agency →</a>
+    <a href="https://www.kjscreative.in" class="btn-primary">View Agency →</a>
     <a href="#tools" class="btn-secondary">Back to Tools</a>
   </div>
 </section>
@@ -1669,7 +1723,7 @@ footer {
   <div class="footer-logo">KJS <span>Creative</span></div>
   <div class="footer-text">© 2026 KJS Creative. All rights reserved.</div>
   <div class="footer-links">
-    <a href="/">Agency</a>
+    <a href="https://www.kjscreative.in">Agency</a>
     <a href="#tools">Tools</a>
     <a href="/#about">About</a>
   </div>
@@ -1736,7 +1790,7 @@ footer {
       <div class="modal-icon icon-teal">🎨</div>
       <div>
         <div class="modal-title">AI Color Palette Generator</div>
-        <div class="modal-subtitle">Select a brand style and generate premium color combinations instantly. Click any swatch to copy the HEX code.</div>
+        <div class="modal-subtitle">Select a brand style or choose custom colors to generate premium combinations instantly. Click any swatch to copy the HEX code.</div>
       </div>
     </div>
     <div class="modal-body">
@@ -1749,6 +1803,21 @@ footer {
         <button class="style-btn" data-style="elegant" onclick="selectStyle(this,'elegant')">Elegant</button>
         <button class="style-btn" data-style="earth" onclick="selectStyle(this,'earth')">Earth Tones</button>
         <button class="style-btn" data-style="pastel" onclick="selectStyle(this,'pastel')">Pastel</button>
+      </div>
+      <div class="custom-palette-panel">
+        <label class="custom-color-field">
+          <span class="custom-color-label">Primary</span>
+          <input class="custom-color-input" id="cp-custom-primary" type="color" value="#0d0d0d" oninput="previewCustomPalette()">
+        </label>
+        <label class="custom-color-field">
+          <span class="custom-color-label">Accent</span>
+          <input class="custom-color-input" id="cp-custom-accent" type="color" value="#ff3c1f" oninput="previewCustomPalette()">
+        </label>
+        <label class="custom-color-field">
+          <span class="custom-color-label">Base</span>
+          <input class="custom-color-input" id="cp-custom-base" type="color" value="#f5f4f0" oninput="previewCustomPalette()">
+        </label>
+        <button class="custom-color-btn" onclick="generateCustomPalette()">Use Custom</button>
       </div>
       <div class="palette-display" id="cp-display"></div>
       <div class="palette-actions">
@@ -2216,10 +2285,65 @@ function selectStyle(btn, style) {
 
 let currentPaletteIdx = 0;
 function generatePalette() {
+  if (currentStyle === 'custom') {
+    generateCustomPalette();
+    return;
+  }
   const options = palettes[currentStyle];
   currentPaletteIdx = (currentPaletteIdx + 1) % options.length;
   const colors = options[currentPaletteIdx];
   renderPalette(colors);
+}
+
+function previewCustomPalette() {
+  currentStyle = 'custom';
+  document.querySelectorAll('#cp-styles .style-btn').forEach(b => b.classList.remove('active'));
+  generateCustomPalette(false);
+}
+
+function generateCustomPalette(showMessage = true) {
+  currentStyle = 'custom';
+  document.querySelectorAll('#cp-styles .style-btn').forEach(b => b.classList.remove('active'));
+
+  const primary = document.getElementById('cp-custom-primary').value;
+  const accent = document.getElementById('cp-custom-accent').value;
+  const base = document.getElementById('cp-custom-base').value;
+  const colors = [
+    primary,
+    mixHex(primary, accent, 0.35),
+    accent,
+    mixHex(base, accent, 0.18),
+    base
+  ];
+
+  renderPalette(colors);
+  if (showMessage) showToast('✦ Custom palette generated!');
+}
+
+function hexToRgb(hex) {
+  const clean = hex.replace('#', '');
+  return {
+    r: parseInt(clean.slice(0, 2), 16),
+    g: parseInt(clean.slice(2, 4), 16),
+    b: parseInt(clean.slice(4, 6), 16)
+  };
+}
+
+function rgbToHex({ r, g, b }) {
+  return '#' + [r, g, b].map(v => {
+    const hex = Math.round(v).toString(16).padStart(2, '0');
+    return hex;
+  }).join('').toUpperCase();
+}
+
+function mixHex(hexA, hexB, amount) {
+  const a = hexToRgb(hexA);
+  const b = hexToRgb(hexB);
+  return rgbToHex({
+    r: a.r + (b.r - a.r) * amount,
+    g: a.g + (b.g - a.g) * amount,
+    b: a.b + (b.b - a.b) * amount
+  });
 }
 
 function renderPalette(colors) {
