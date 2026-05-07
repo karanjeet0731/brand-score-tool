@@ -2131,42 +2131,21 @@ async function runBrandScore() {
   simulateLoading('bs-loading', 'bs-loading-fill', 'bs-status', steps, async () => {
     try {
       const brandInput = name || url || ig;
-      const prompt = `You are a premium brand analyst. Analyze this brand: "${brandInput}" (URL: ${url || 'not provided'}, Instagram: ${ig || 'not provided'}).
-
-Generate a brand analysis in JSON format only, no other text:
-{
-  "overallScore": <number 45-92>,
-  "grade": "<Excellent|Strong|Good|Needs Work>",
-  "summary": "<one sentence summary>",
-  "dimensions": [
-    {"name": "Visual Identity", "score": <number>},
-    {"name": "UI / UX Quality", "score": <number>},
-    {"name": "Brand Consistency", "score": <number>},
-    {"name": "Trust Signals", "score": <number>},
-    {"name": "Social Presence", "score": <number>}
-  ],
-  "insights": [
-    {"title": "✦ Strength", "icon": "💪", "text": "<specific strength>"},
-    {"title": "⚡ Quick Win", "icon": "⚡", "text": "<specific improvement>"},
-    {"title": "🎯 Priority Fix", "icon": "🎯", "text": "<biggest issue to fix>"},
-    {"title": "🚀 Opportunity", "icon": "🚀", "text": "<growth opportunity>"}
-  ]
-}`;
-
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch('/api/brand-score', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          messages: [{ role: 'user', content: prompt }]
+          brandName: brandInput
         })
       });
+
       const data = await res.json();
-      const text = data.content.map(b => b.text || '').join('');
-      const clean = text.replace(/```json|```/g, '').trim();
-      const result = JSON.parse(clean);
-      renderBrandScore(result);
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Unable to analyze brand');
+      }
+
+      renderBrandScore(mapBrandScoreApiResponse(data));
     } catch (e) {
       // Fallback result
       renderBrandScore({
@@ -2193,6 +2172,53 @@ Generate a brand analysis in JSON format only, no other text:
   });
 }
 
+function getBrandGrade(score) {
+  if (score >= 85) return 'Excellent';
+  if (score >= 72) return 'Strong';
+  if (score >= 58) return 'Good';
+  return 'Needs Work';
+}
+
+function mapBrandScoreApiResponse(data) {
+  const score = Number(data.score) || 0;
+  const strengths = Array.isArray(data.strengths) ? data.strengths : [];
+  const weaknesses = Array.isArray(data.weaknesses) ? data.weaknesses : [];
+  const palette = Array.isArray(data.colorPaletteSuggestion) ? data.colorPaletteSuggestion : [];
+  const paletteText = palette
+    .map(color => `${color.name || 'Color'} ${color.hex || ''}`.trim())
+    .filter(Boolean)
+    .join(', ');
+
+  return {
+    overallScore: score,
+    grade: getBrandGrade(score),
+    summary: strengths[0] || 'Your brand has clear opportunities to sharpen its positioning.',
+    dimensions: [
+      { name: 'Brand Clarity', score },
+      { name: 'Memorability', score: Math.max(0, Math.min(100, score - 4)) },
+      { name: 'Visual Direction', score: Math.max(0, Math.min(100, score + 3)) },
+      { name: 'Positioning', score: Math.max(0, Math.min(100, score - 7)) },
+      { name: 'Market Fit', score: Math.max(0, Math.min(100, score - 2)) }
+    ],
+    insights: [
+      { title: 'Strength', icon: '✦', text: strengths[0] || 'The brand has a usable foundation for positioning and identity work.' },
+      { title: 'Weakness', icon: '⚡', text: weaknesses[0] || 'The brand could use sharper differentiation and clearer proof points.' },
+      { title: 'Tagline', icon: '🎯', text: data.taglineSuggestion || 'A concise promise-led tagline would make the brand easier to remember.' },
+      { title: 'Palette', icon: '🎨', text: paletteText || 'Use a focused palette with one primary, one accent, and one neutral background color.' },
+      { title: 'Fonts', icon: 'Aa', text: data.fontPairingSuggestion || 'Use a confident display face for headings with a clean sans-serif for body copy.' }
+    ]
+  };
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 function renderBrandScore(data) {
   document.getElementById('bs-score-num').textContent = data.overallScore;
   document.getElementById('bs-score-title').textContent = data.grade + ' Brand';
@@ -2202,11 +2228,11 @@ function renderBrandScore(data) {
   bars.innerHTML = data.dimensions.map(d => `
     <div class="score-bar-item">
       <div class="score-bar-top">
-        <span class="score-bar-name">${d.name}</span>
-        <span class="score-bar-val">${d.score}/100</span>
+        <span class="score-bar-name">${escapeHtml(d.name)}</span>
+        <span class="score-bar-val">${escapeHtml(d.score)}/100</span>
       </div>
       <div class="score-bar-bg">
-        <div class="score-bar-fill" style="width:0%" data-target="${d.score}%"></div>
+        <div class="score-bar-fill" style="width:0%" data-target="${escapeHtml(d.score)}%"></div>
       </div>
     </div>
   `).join('');
@@ -2214,8 +2240,8 @@ function renderBrandScore(data) {
   const insights = document.getElementById('bs-insights');
   insights.innerHTML = data.insights.map(i => `
     <div class="insight-card">
-      <div class="insight-card-title">${i.icon} ${i.title}</div>
-      <div class="insight-card-text">${i.text}</div>
+      <div class="insight-card-title">${escapeHtml(i.icon)} ${escapeHtml(i.title)}</div>
+      <div class="insight-card-text">${escapeHtml(i.text)}</div>
     </div>
   `).join('');
 
