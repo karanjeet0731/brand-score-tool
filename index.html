@@ -2150,8 +2150,9 @@ async function runBrandScore() {
       renderBrandScore(mapBrandScoreApiResponse(data));
     } catch (e) {
       console.error('Brand Score API failed:', e);
-      showToast('AI API failed. Check OPENAI_API_KEY on Vercel.');
-      renderBrandScore(createLocalBrandScoreFallback(brandInput));
+      const errorMessage = e && e.message ? e.message : 'AI API request failed.';
+      showToast(errorMessage);
+      renderBrandScore(createLocalBrandScoreFallback(brandInput, errorMessage));
     }
     btn.disabled = false;
     btnText.textContent = 'Analyze My Brand ✦';
@@ -2196,7 +2197,7 @@ function mapBrandScoreApiResponse(data) {
   };
 }
 
-function createLocalBrandScoreFallback(brandInput) {
+function createLocalBrandScoreFallback(brandInput, errorMessage) {
   const text = String(brandInput || 'brand').toLowerCase();
   const seed = Array.from(text).reduce((sum, char) => sum + char.charCodeAt(0), 0);
   const score = 52 + (seed % 38);
@@ -2209,7 +2210,7 @@ function createLocalBrandScoreFallback(brandInput) {
   return {
     overallScore: score,
     grade: getBrandGrade(score),
-    summary: 'Backup estimate shown because the AI API request failed. Vercel env/API logs need checking.',
+    summary: 'Backup estimate shown because the live AI request failed.',
     dimensions: [
       { name: 'Brand Clarity', score: clarity },
       { name: 'Memorability', score: memorability },
@@ -2218,10 +2219,10 @@ function createLocalBrandScoreFallback(brandInput) {
       { name: 'Market Fit', score: market }
     ],
     insights: [
-      { title: 'API Status', icon: '!', text: 'Live AI scoring did not respond. Add OPENAI_API_KEY in Vercel and redeploy.' },
+      { title: 'API Status', icon: '!', text: errorMessage || 'Live AI scoring did not respond. Check the backend/API logs.' },
       { title: 'Input Read', icon: '✦', text: `Analyzed input: ${brandInput || 'No brand input found'}` },
       { title: 'Quick Win', icon: '⚡', text: 'Use a clearer brand name, website URL, or social handle to improve the live analysis context.' },
-      { title: 'Next Step', icon: '🎯', text: 'Open /api/brand-score directly in Network logs to see the backend error response.' }
+      { title: 'Next Step', icon: '🎯', text: 'Check OpenAI billing/quota or use an API key with available credits, then redeploy if env vars changed.' }
     ]
   };
 }
