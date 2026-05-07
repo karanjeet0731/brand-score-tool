@@ -200,8 +200,7 @@ module.exports = async function handler(req, res) {
               ]
             }
           }
-        },
-        temperature: 0.7
+        }
       })
     }).finally(() => clearTimeout(timeout));
 
@@ -229,4 +228,3 @@ module.exports = async function handler(req, res) {
     });
   }
 };
-
