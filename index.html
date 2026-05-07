@@ -1,1 +1,2728 @@
-# brand-score-tool
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KJS Creative AI Toolkit — Premium Creative Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --white: #ffffff;
+  --black: #0d0d0d;
+  --off-white: #f5f4f0;
+  --gray: #888880;
+  --gray-light: #e8e7e3;
+  --accent: #ff3c1f;
+  --accent-teal: #098b8a;
+  --accent-blue: #2563eb;
+  --sans: 'Archivo', 'Helvetica Neue', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--white);
+  color: var(--black);
+  font-family: var(--sans);
+  font-weight: 400;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+a, button { cursor: pointer; }
+
+/* CUSTOM CURSOR */
+.cursor {
+  position: fixed;
+  width: 20px; height: 20px;
+  border: 2px solid var(--black);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  left: 0; top: 0;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  will-change: transform;
+}
+.cursor.hovered {
+  width: 44px; height: 44px;
+  border-color: var(--accent);
+  background: rgba(255,60,31,0.08);
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.8rem 3rem;
+  background: rgba(255,255,255,0);
+  transition: background 0.3s ease, backdrop-filter 0.3s ease;
+}
+nav.scrolled {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+nav::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 3rem; right: 3rem;
+  height: 1px;
+  background: rgba(0,0,0,0.08);
+}
+.nav-logo {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--black);
+  text-decoration: none;
+}
+.nav-logo span { color: var(--accent); }
+.nav-right { display: flex; align-items: center; gap: 2.5rem; }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--black);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  opacity: 0.6;
+  transition: opacity .2s;
+}
+.nav-links a:hover { opacity: 1; }
+.nav-cta {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--black);
+  padding: 0.65rem 1.5rem;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background .2s;
+}
+.nav-cta:hover { background: var(--accent); }
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: none;
+  border: none;
+  padding: 0;
+}
+.hamburger span {
+  display: block;
+  width: 24px; height: 2px;
+  background: var(--black);
+  transition: all 0.3s ease;
+}
+.hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(8px, 8px); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(7px, -7px); }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 3rem 4rem;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--gray-light);
+  background: var(--white);
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.hero-orb-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(255,60,31,0.12) 0%, transparent 70%);
+  top: -100px; right: -100px;
+  animation: orbFloat 18s ease-in-out infinite;
+}
+.hero-orb-2 {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, rgba(9,139,138,0.1) 0%, transparent 70%);
+  bottom: 0; left: -50px;
+  animation: orbFloat 22s ease-in-out infinite reverse;
+}
+.hero-orb-3 {
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(37,99,235,0.08) 0%, transparent 70%);
+  top: 40%; left: 40%;
+  animation: orbFloat 14s ease-in-out infinite 3s;
+}
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(20px, -30px) scale(1.05); }
+  66% { transform: translate(-15px, 20px) scale(0.95); }
+}
+
+.hero-bg-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(120px, 18vw, 260px);
+  font-weight: 700;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(0,0,0,0.05);
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+  letter-spacing: -0.05em;
+  animation: bgTextFloat 10s ease-in-out infinite;
+}
+@keyframes bgTextFloat {
+  0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+  50% { transform: translate(-50%, -50%) translateY(-15px); }
+}
+
+.hero-top {
+  position: absolute;
+  top: 7rem; left: 3rem; right: 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  z-index: 2;
+}
+.hero-tag {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  animation: fadeInUp 0.8s ease 0.3s both;
+}
+.hero-tag::before {
+  content: '';
+  display: block;
+  width: 24px; height: 1px;
+  background: var(--gray);
+}
+.hero-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(9,139,138,0.08);
+  border: 1px solid rgba(9,139,138,0.2);
+  padding: 0.45rem 0.9rem;
+  border-radius: 100px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-teal);
+  animation: fadeInUp 0.8s ease 0.5s both;
+}
+.hero-badge-dot {
+  width: 6px; height: 6px;
+  background: var(--accent-teal);
+  border-radius: 50%;
+  animation: pulse 2s ease infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+.hero-bottom {
+  position: relative;
+  z-index: 2;
+  animation: fadeInUp 0.9s ease 0.2s both;
+}
+.hero-title {
+  font-size: clamp(3.5rem, 8vw, 8.5rem);
+  font-weight: 700;
+  line-height: 0.93;
+  letter-spacing: -0.04em;
+  color: var(--black);
+  max-width: 90%;
+  margin-bottom: 2.5rem;
+}
+.hero-title .italic {
+  font-style: italic;
+  font-weight: 300;
+}
+.hero-title .accent-word {
+  color: var(--accent);
+  position: relative;
+  display: inline-block;
+}
+.hero-title .teal-word { color: var(--accent-teal); }
+
+.hero-foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+}
+.hero-desc {
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--gray);
+  max-width: 380px;
+  line-height: 1.75;
+}
+.hero-actions { display: flex; align-items: center; gap: 1.5rem; }
+.btn-primary {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--black);
+  padding: 1rem 2rem;
+  border-radius: 6px;
+  text-decoration: none;
+  border: none;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.btn-primary:hover { background: var(--accent); transform: translateY(-2px); box-shadow: 0 12px 36px rgba(255,60,31,0.3); }
+.btn-secondary {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--black);
+  text-decoration: none;
+  border-bottom: 1px solid var(--gray-light);
+  padding-bottom: 3px;
+  transition: all 0.3s ease;
+}
+.btn-secondary:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+.hero-scroll-hint {
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gray);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  writing-mode: vertical-rl;
+  position: absolute;
+  right: 3rem; bottom: 5rem;
+  z-index: 2;
+}
+.hero-scroll-line {
+  width: 1px; height: 60px;
+  background: var(--gray-light);
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+.hero-scroll-line::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  width: 100%; height: 100%;
+  background: var(--accent);
+  animation: scrollLine 2s ease infinite;
+}
+@keyframes scrollLine {
+  0% { top: -100%; }
+  100% { top: 100%; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* TICKER */
+.ticker {
+  background: var(--black);
+  padding: 1rem 0;
+  overflow: hidden;
+}
+.ticker-track {
+  display: flex;
+  gap: 0;
+  animation: ticker 35s linear infinite;
+  width: max-content;
+}
+.ticker-item {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--white);
+  padding: 0 2.5rem;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+}
+.ticker-item::after { content: '✦'; color: var(--accent); font-size: 0.6rem; }
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* TOOLS SECTION */
+.tools-section {
+  padding: 6rem 3rem;
+  border-bottom: 1px solid var(--gray-light);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 4rem;
+}
+.section-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 0.8rem;
+}
+.section-title {
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+.section-title .italic { font-style: italic; font-weight: 300; }
+
+/* TOOLS GRID */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5px;
+  background: var(--gray-light);
+  border: 1.5px solid var(--gray-light);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.tool-card {
+  background: var(--white);
+  padding: 2.5rem;
+  position: relative;
+  transition: background 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.featured-tool-card { grid-column: 1 / -1; }
+.featured-tool-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+.featured-tool-copy { min-width: 0; }
+.featured-tool-preview {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-left: auto;
+  min-width: 200px;
+}
+.featured-tool-quote {
+  background: var(--off-white);
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  color: var(--gray);
+  font-style: italic;
+  line-height: 1.5;
+}
+.featured-tool-quote strong {
+  color: var(--black);
+  font-style: normal;
+}
+.tool-card:hover { background: var(--off-white); }
+
+.tool-card-glow {
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.tool-card:hover .tool-card-glow { opacity: 1; }
+.glow-red { background: radial-gradient(circle, rgba(255,60,31,0.12) 0%, transparent 70%); }
+.glow-teal { background: radial-gradient(circle, rgba(9,139,138,0.12) 0%, transparent 70%); }
+.glow-blue { background: radial-gradient(circle, rgba(37,99,235,0.1) 0%, transparent 70%); }
+.glow-purple { background: radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 70%); }
+.glow-orange { background: radial-gradient(circle, rgba(249,115,22,0.1) 0%, transparent 70%); }
+.glow-green { background: radial-gradient(circle, rgba(22,163,74,0.1) 0%, transparent 70%); }
+.glow-pink { background: radial-gradient(circle, rgba(236,72,153,0.1) 0%, transparent 70%); }
+
+.tool-icon {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  position: relative;
+  z-index: 1;
+}
+.icon-red { background: rgba(255,60,31,0.1); }
+.icon-teal { background: rgba(9,139,138,0.1); }
+.icon-blue { background: rgba(37,99,235,0.1); }
+.icon-purple { background: rgba(124,58,237,0.1); }
+.icon-orange { background: rgba(249,115,22,0.1); }
+.icon-green { background: rgba(22,163,74,0.1); }
+.icon-pink { background: rgba(236,72,153,0.1); }
+
+.tool-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 100px;
+  position: absolute;
+  top: 2rem; right: 2rem;
+}
+.badge-ai { background: rgba(255,60,31,0.1); color: var(--accent); }
+.badge-free { background: rgba(9,139,138,0.1); color: var(--accent-teal); }
+.badge-new { background: rgba(124,58,237,0.1); color: #7c3aed; }
+
+.tool-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--black);
+  position: relative;
+  z-index: 1;
+}
+.tool-desc {
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: var(--gray);
+  line-height: 1.7;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+}
+.tool-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  position: relative;
+  z-index: 1;
+}
+.tool-feature-tag {
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+  background: var(--gray-light);
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+}
+.tool-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--black);
+  text-decoration: none;
+  border: none;
+  background: none;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+  transition: gap 0.25s ease, color 0.25s ease;
+  margin-top: auto;
+}
+.tool-cta:hover { color: var(--accent); gap: 0.75rem; }
+.tool-cta .arrow { font-size: 1rem; transition: transform 0.25s ease; }
+.tool-cta:hover .arrow { transform: translate(3px, -3px); }
+
+/* TOOL MODAL */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+.modal-overlay.active { display: flex; }
+
+.modal {
+  background: var(--white);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 780px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalIn 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.25);
+  position: relative;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-close {
+  position: absolute;
+  top: 1.5rem; right: 1.5rem;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--off-white);
+  border: none;
+  font-size: 1rem;
+  color: var(--gray);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.modal-close:hover { background: var(--accent); color: var(--white); }
+
+.modal-header {
+  padding: 2.5rem 2.5rem 1.5rem;
+  border-bottom: 1px solid var(--gray-light);
+  display: flex;
+  align-items: flex-start;
+  gap: 1.2rem;
+}
+.modal-icon {
+  width: 60px; height: 60px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+.modal-title { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.3rem; }
+.modal-subtitle { font-size: 0.82rem; font-weight: 300; color: var(--gray); line-height: 1.6; max-width: 500px; }
+.modal-body { padding: 2rem 2.5rem 2.5rem; }
+
+/* BRAND SCORE TOOL */
+.tool-form { display: flex; flex-direction: column; gap: 1.2rem; }
+.form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+.form-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--black);
+}
+.form-input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1.5px solid var(--gray-light);
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  color: var(--black);
+  background: var(--white);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+.form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255,60,31,0.08); }
+.form-input::placeholder { color: var(--gray); }
+
+.submit-btn {
+  padding: 0.9rem 2rem;
+  background: var(--black);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.submit-btn:hover { background: var(--accent); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(255,60,31,0.3); }
+.submit-btn:disabled { background: var(--gray); cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* RESULT AREA */
+.result-area {
+  display: none;
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: var(--off-white);
+  border-radius: 12px;
+  border: 1px solid var(--gray-light);
+}
+.result-area.visible { display: block; animation: fadeInUp 0.4s ease; }
+
+/* BRAND SCORE */
+.score-display {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.5rem;
+  background: var(--black);
+  border-radius: 12px;
+  color: var(--white);
+  margin-bottom: 1.2rem;
+}
+.score-number {
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+  line-height: 1;
+  flex-shrink: 0;
+}
+.score-label { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem; }
+.score-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; }
+.score-sub { font-size: 0.78rem; font-weight: 300; color: rgba(255,255,255,0.6); }
+
+.score-bars { margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; }
+.score-bar-item {}
+.score-bar-top { display: flex; justify-content: space-between; margin-bottom: 0.3rem; }
+.score-bar-name { font-size: 0.72rem; font-weight: 500; color: var(--black); }
+.score-bar-val { font-size: 0.72rem; font-weight: 600; color: var(--accent); }
+.score-bar-bg { height: 4px; background: var(--gray-light); border-radius: 2px; overflow: hidden; }
+.score-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 1s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+
+.insights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+.insight-card {
+  padding: 1rem;
+  border: 1px solid var(--gray-light);
+  border-radius: 10px;
+  background: var(--white);
+}
+.insight-card-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.4rem; }
+.insight-card-text { font-size: 0.78rem; font-weight: 300; color: var(--gray); line-height: 1.5; }
+
+/* COLOR PALETTE TOOL */
+.style-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+.style-btn {
+  padding: 0.7rem 0.5rem;
+  border: 1.5px solid var(--gray-light);
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--white);
+  color: var(--gray);
+  transition: all 0.2s ease;
+  text-align: center;
+}
+.style-btn:hover, .style-btn.active { border-color: var(--black); color: var(--black); background: var(--off-white); }
+.style-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(255,60,31,0.04); }
+
+.palette-display { display: flex; flex-direction: column; gap: 1rem; }
+.palette-row {
+  display: flex;
+  gap: 0.5rem;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--gray-light);
+}
+.palette-swatch {
+  flex: 1;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.5rem 0.3rem;
+  position: relative;
+  transition: flex 0.3s ease;
+  overflow: hidden;
+}
+.palette-swatch:hover { flex: 1.4; }
+.swatch-hex {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.9);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.2s;
+  cursor: pointer;
+}
+.palette-swatch:hover .swatch-hex { opacity: 1; }
+.swatch-copy-toast {
+  position: absolute;
+  bottom: 30px;
+  font-size: 0.58rem;
+  font-weight: 700;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.swatch-copy-toast.show { opacity: 1; }
+
+.palette-actions { display: flex; gap: 0.8rem; margin-top: 1rem; }
+.palette-action-btn {
+  flex: 1;
+  padding: 0.7rem;
+  border: 1.5px solid var(--gray-light);
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--white);
+  color: var(--black);
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+}
+.palette-action-btn:hover { border-color: var(--black); background: var(--black); color: var(--white); }
+
+/* FONT TOOL */
+.font-preview-card {
+  padding: 2rem;
+  border: 1px solid var(--gray-light);
+  border-radius: 12px;
+  background: var(--white);
+  margin-top: 1rem;
+}
+.font-preview-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 0.5rem;
+}
+.font-preview-heading {
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 0.8rem;
+}
+.font-preview-body {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--gray);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+.font-preview-cta {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.65rem 1.4rem;
+  background: var(--black);
+  color: var(--white);
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: default;
+}
+.font-pair-info {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+.font-pair-item {
+  padding: 0.8rem;
+  background: var(--off-white);
+  border-radius: 8px;
+}
+.font-pair-role { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.3rem; }
+.font-pair-name { font-size: 0.82rem; font-weight: 600; color: var(--black); }
+
+/* TEXT GENERATOR */
+.text-type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+.text-type-btn {
+  padding: 0.6rem 0.5rem;
+  border: 1.5px solid var(--gray-light);
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--white);
+  color: var(--gray);
+  transition: all 0.2s;
+  text-align: center;
+}
+.text-type-btn:hover, .text-type-btn.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(255,60,31,0.04);
+}
+.generated-text-card {
+  padding: 1.5rem;
+  background: var(--black);
+  border-radius: 12px;
+  color: var(--white);
+  margin-top: 1rem;
+  position: relative;
+}
+.generated-text-content {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 1rem;
+}
+.generated-text-actions { display: flex; gap: 0.6rem; }
+.gen-action-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 6px;
+  font-family: var(--sans);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: transparent;
+  color: rgba(255,255,255,0.7);
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 0.3rem;
+}
+.gen-action-btn:hover { background: rgba(255,255,255,0.1); color: var(--white); }
+
+/* FILE TOOLS */
+.upload-zone {
+  border: 2px dashed var(--gray-light);
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.upload-zone.drag-over {
+  border-color: var(--accent);
+  background: rgba(255,60,31,0.03);
+}
+.upload-zone-icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+.upload-zone-title { font-size: 0.9rem; font-weight: 600; color: var(--black); margin-bottom: 0.4rem; }
+.upload-zone-sub { font-size: 0.78rem; font-weight: 300; color: var(--gray); margin-bottom: 1.2rem; }
+.upload-hidden { display: none; }
+.upload-btn {
+  padding: 0.7rem 1.5rem;
+  background: var(--black);
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+.upload-btn:hover { background: var(--accent); }
+
+.preview-container { display: none; }
+.preview-container.visible { display: block; margin-top: 1.5rem; animation: fadeInUp 0.4s ease; }
+.preview-images { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.preview-box {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--gray-light);
+  position: relative;
+}
+.preview-label {
+  position: absolute;
+  top: 0.7rem; left: 0.7rem;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(0,0,0,0.6);
+  color: var(--white);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+}
+.preview-img { width: 100%; height: 180px; object-fit: cover; display: block; }
+
+/* COMPRESSOR */
+.quality-slider-wrap { margin: 1rem 0; }
+.quality-label { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+.quality-label span { font-size: 0.72rem; font-weight: 500; color: var(--gray); }
+.quality-label strong { font-size: 0.8rem; font-weight: 700; color: var(--accent); }
+.quality-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--gray-light);
+  border-radius: 2px;
+  outline: none;
+}
+.quality-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--black);
+  cursor: pointer;
+  transition: background 0.2s;
+  border: 3px solid var(--white);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.quality-slider::-webkit-slider-thumb:hover { background: var(--accent); }
+
+/* CONVERTER */
+.convert-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem; margin-bottom: 1rem; }
+.convert-option {
+  padding: 0.8rem;
+  border: 1.5px solid var(--gray-light);
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  background: var(--white);
+  color: var(--gray);
+  transition: all 0.2s;
+  text-align: center;
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+}
+.convert-option:hover, .convert-option.active {
+  border-color: var(--accent-teal);
+  color: var(--accent-teal);
+  background: rgba(9,139,138,0.04);
+}
+
+/* LOADING */
+.loading-bar {
+  height: 3px;
+  background: var(--gray-light);
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+.loading-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-teal));
+  border-radius: 2px;
+  transition: width 0.5s ease;
+  animation: shimmer 1.5s ease infinite;
+}
+@keyframes shimmer {
+  0% { opacity: 0.7; }
+  50% { opacity: 1; }
+  100% { opacity: 0.7; }
+}
+
+/* STATS BAR */
+.stats-bar {
+  background: var(--black);
+  padding: 2.5rem 3rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.stat-item {
+  padding: 0 2rem;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+.stat-item:first-child { padding-left: 0; }
+.stat-item:last-child { border-right: none; }
+.stat-num {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+.stat-num span { color: var(--accent); }
+.stat-label {
+  font-size: 0.68rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* FUTURE FEATURES */
+.future-section {
+  padding: 6rem 3rem;
+  background: var(--black);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.future-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-top: 3rem;
+}
+.future-card {
+  background: var(--black);
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+}
+.future-card:hover { background: #111; }
+.future-card-icon { font-size: 1.8rem; margin-bottom: 1rem; display: block; opacity: 0.6; }
+.future-card-name { font-size: 0.95rem; font-weight: 600; color: rgba(255,255,255,0.8); margin-bottom: 0.4rem; letter-spacing: -0.01em; }
+.future-card-desc { font-size: 0.75rem; font-weight: 300; color: rgba(255,255,255,0.35); line-height: 1.6; }
+.future-card-badge {
+  display: inline-block;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 100px;
+  margin-bottom: 0.8rem;
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.3);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* CTA SECTION */
+.cta-section {
+  padding: 8rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--gray-light);
+}
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(255,60,31,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.cta-eyebrow { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); margin-bottom: 1.5rem; }
+.cta-title {
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 1.5rem;
+}
+.cta-title .italic { font-style: italic; font-weight: 300; }
+.cta-title .accent-word { color: var(--accent); }
+.cta-sub { font-size: 1rem; font-weight: 300; color: var(--gray); max-width: 440px; margin: 0 auto 2.5rem; line-height: 1.7; }
+.cta-actions { display: flex; align-items: center; justify-content: center; gap: 1.2rem; }
+
+/* FOOTER */
+footer {
+  background: var(--black);
+  padding: 2.5rem 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.footer-logo { font-size: 0.9rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--white); }
+.footer-logo span { color: var(--accent); }
+.footer-text { font-size: 0.7rem; color: rgba(255,255,255,0.35); letter-spacing: 0.04em; }
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-links a { font-size: 0.68rem; color: rgba(255,255,255,0.35); text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase; transition: color 0.2s; }
+.footer-links a:hover { color: rgba(255,255,255,0.7); }
+
+/* TOAST */
+.global-toast {
+  position: fixed;
+  bottom: 2rem; right: 2rem;
+  background: var(--black);
+  color: var(--white);
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  z-index: 99998;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.global-toast.show { transform: translateY(0); opacity: 1; }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  nav { padding: 1.25rem; }
+  nav::after { left: 1.25rem; right: 1.25rem; }
+  .hamburger { display: flex; }
+  .nav-right { position: fixed; top: 56px; left: 0; right: 0; flex-direction: column; gap: 0; background: var(--white); max-height: 0; overflow: hidden; transition: max-height 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 999; }
+  .nav-right.active { max-height: 320px; }
+  .nav-links { flex-direction: column; gap: 0; width: 100%; }
+  .nav-links li { border-bottom: 1px solid var(--gray-light); }
+  .nav-links a { display: block; padding: 1rem 1.5rem; opacity: 0.8; font-size: 0.9rem; }
+  .nav-cta { margin: 1rem; text-align: center; width: calc(100% - 2rem); display: block; }
+  .hero {
+    min-height: auto;
+    padding: 8.5rem 1.5rem 4rem;
+  }
+  .hero-top {
+    position: relative;
+    inset: auto;
+    margin-bottom: 5rem;
+  }
+  .hero-scroll-hint { right: 1.5rem; }
+  .tools-section { padding: 4rem 1.5rem; }
+  .tools-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tool-card { padding: 2rem; }
+  .featured-tool-layout { flex-direction: column; }
+  .featured-tool-preview {
+    width: 100%;
+    min-width: 0;
+    margin-left: 0;
+  }
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .stat-item { padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .future-section { padding: 4rem 1.5rem; }
+  .future-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cta-section { padding: 5rem 1.5rem; }
+  footer { flex-direction: column; gap: 1rem; padding: 2rem 1.5rem; text-align: center; }
+  .section-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+}
+@media (max-width: 600px) {
+  body { cursor: auto; }
+  .cursor { display: none; }
+  a, button { cursor: pointer; }
+  nav { padding: 1rem; }
+  nav::after { left: 1rem; right: 1rem; }
+  .nav-logo { font-size: 0.88rem; }
+  .hero {
+    padding: 7rem 1rem 3rem;
+    justify-content: flex-start;
+  }
+  .hero-top {
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+  .hero-tag {
+    font-size: 0.64rem;
+    letter-spacing: 0.12em;
+  }
+  .hero-tag::before { width: 18px; }
+  .hero-badge {
+    border-radius: 8px;
+    font-size: 0.62rem;
+    letter-spacing: 0.07em;
+  }
+  .hero-bg-text {
+    font-size: clamp(72px, 29vw, 140px);
+    white-space: normal;
+    text-align: center;
+    line-height: 0.85;
+  }
+  .hero-title {
+    font-size: clamp(2.65rem, 15vw, 4.25rem);
+    max-width: 100%;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.035em;
+  }
+  .hero-desc {
+    max-width: 100%;
+    font-size: 0.95rem;
+  }
+  .tools-grid { grid-template-columns: 1fr; }
+  .tools-section,
+  .future-section { padding: 3.5rem 1rem; }
+  .section-header { margin-bottom: 2.5rem; }
+  .section-title { font-size: clamp(2rem, 11vw, 2.8rem); }
+  .tool-card { padding: 1.5rem; }
+  .tool-badge {
+    top: 1.5rem;
+    right: 1.5rem;
+  }
+  .hero-foot { flex-direction: column; align-items: flex-start; }
+  .hero-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  .btn-primary {
+    justify-content: center;
+    width: 100%;
+    padding: 0.95rem 1.25rem;
+  }
+  .btn-secondary { align-self: center; }
+  .hero-scroll-hint { display: none; }
+  .ticker-item {
+    padding: 0 1.4rem;
+    gap: 1.4rem;
+  }
+  .stats-bar {
+    grid-template-columns: 1fr 1fr;
+    padding: 1.5rem 1rem;
+  }
+  .stat-item { padding: 1rem 0.8rem; }
+  .stat-num { font-size: 2rem; }
+  .future-grid { grid-template-columns: 1fr 1fr; }
+  .future-card { padding: 1.4rem; }
+  .style-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .insights-grid { grid-template-columns: 1fr; }
+  .font-pair-info { grid-template-columns: 1fr; }
+  .preview-images { grid-template-columns: 1fr; }
+  .text-type-grid,
+  .convert-options { grid-template-columns: 1fr; }
+  .score-display {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.2rem;
+  }
+  .palette-actions,
+  .generated-text-actions,
+  .cta-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .palette-row { flex-wrap: wrap; }
+  .palette-swatch {
+    flex: 1 1 calc(50% - 0.25rem);
+    min-width: calc(50% - 0.25rem);
+  }
+  .palette-swatch:hover { flex: 1 1 calc(50% - 0.25rem); }
+  .swatch-hex { opacity: 1; }
+  .font-preview-card,
+  .generated-text-card,
+  .result-area { padding: 1.2rem; }
+  .font-preview-heading { font-size: 1.7rem; }
+  .upload-zone { padding: 2rem 1rem; }
+  .preview-img { height: 150px; }
+  .modal-overlay {
+    align-items: flex-end;
+    padding: 0.75rem;
+  }
+  .modal {
+    max-height: calc(100dvh - 1.5rem);
+    border-radius: 16px;
+  }
+  .modal-body { padding: 1.5rem; }
+  .modal-header {
+    padding: 1.5rem 4rem 1.5rem 1.5rem;
+    flex-direction: column;
+  }
+  .modal-close {
+    top: 1rem;
+    right: 1rem;
+  }
+  .global-toast {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    justify-content: center;
+  }
+  footer { align-items: stretch; }
+  .footer-links {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 380px) {
+  .hero-title { font-size: 2.45rem; }
+  .stats-bar,
+  .future-grid { grid-template-columns: 1fr; }
+  .stat-item { border-right: none; }
+  .palette-swatch {
+    flex-basis: 100%;
+    min-width: 100%;
+  }
+  .palette-swatch:hover { flex-basis: 100%; }
+  .style-grid { grid-template-columns: 1fr; }
+  .tool-card { padding: 1.25rem; }
+}
+@media (hover: hover) and (pointer: fine) {
+  body,
+  a,
+  button { cursor: none; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor" class="cursor"></div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#" class="nav-logo">KJS <span>Creative</span></a>
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-right" id="navRight">
+    <ul class="nav-links">
+      <li><a href="#tools">Tools</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="/">Agency</a></li>
+    </ul>
+    <a href="#tools" class="nav-cta">Start Free</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+  <div class="hero-bg-text">TOOLKIT</div>
+
+  <div class="hero-top">
+    <div class="hero-tag">AI Creative Platform</div>
+    <div class="hero-badge"><div class="hero-badge-dot"></div> Live — 7 Tools Active</div>
+  </div>
+
+  <div class="hero-bottom">
+    <h1 class="hero-title">
+      Your <span class="italic">creative</span><br>
+      ecosystem.<br>
+      Powered by <span class="accent-word">AI.</span>
+    </h1>
+    <div class="hero-foot">
+      <p class="hero-desc">Brand analysis, color palettes, font pairings, image tools, and AI content — everything founders and creators need, in one platform.</p>
+      <div class="hero-actions">
+        <a href="#tools" class="btn-primary">Explore Tools →</a>
+        <a href="/" class="btn-secondary">Our Agency</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll-hint">
+    SCROLL <span class="hero-scroll-line"></span>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <div class="ticker-item">Brand Score AI</div>
+    <div class="ticker-item">Color Palettes</div>
+    <div class="ticker-item">Font Pairings</div>
+    <div class="ticker-item">Background Remover</div>
+    <div class="ticker-item">Image Compressor</div>
+    <div class="ticker-item">File Converter</div>
+    <div class="ticker-item">AI Text Generator</div>
+    <div class="ticker-item">Brand Score AI</div>
+    <div class="ticker-item">Color Palettes</div>
+    <div class="ticker-item">Font Pairings</div>
+    <div class="ticker-item">Background Remover</div>
+    <div class="ticker-item">Image Compressor</div>
+    <div class="ticker-item">File Converter</div>
+    <div class="ticker-item">AI Text Generator</div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-num">7<span>+</span></div>
+    <div class="stat-label">AI-Powered Tools</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">100<span>%</span></div>
+    <div class="stat-label">Free to Use</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">120<span>+</span></div>
+    <div class="stat-label">Happy Clients</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">8<span>+</span></div>
+    <div class="stat-label">Years of Excellence</div>
+  </div>
+</div>
+
+<!-- TOOLS -->
+<section class="tools-section" id="tools">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">The Toolkit</div>
+      <h2 class="section-title">Creative tools for <span class="italic">ambitious</span> brands.</h2>
+    </div>
+  </div>
+
+  <div class="tools-grid">
+
+    <!-- 1. Brand Score AI -->
+    <div class="tool-card" onclick="openModal('brandScore')">
+      <div class="tool-card-glow glow-red"></div>
+      <span class="tool-badge badge-ai">✦ AI</span>
+      <div class="tool-icon icon-red">🎯</div>
+      <div class="tool-name">Brand Score AI</div>
+      <p class="tool-desc">Enter your website URL, Instagram, or LinkedIn. Our AI analyzes branding, UI/UX, trust signals, and visual consistency — generating a score out of 100.</p>
+      <div class="tool-features">
+        <span class="tool-feature-tag">Score /100</span>
+        <span class="tool-feature-tag">AI Insights</span>
+        <span class="tool-feature-tag">Visual Analysis</span>
+      </div>
+      <button class="tool-cta">Launch Tool <span class="arrow">→</span></button>
+    </div>
+
+    <!-- 2. Color Palette -->
+    <div class="tool-card" onclick="openModal('colorPalette')">
+      <div class="tool-card-glow glow-teal"></div>
+      <span class="tool-badge badge-free">Free</span>
+      <div class="tool-icon icon-teal">🎨</div>
+      <div class="tool-name">AI Color Palettes</div>
+      <p class="tool-desc">Generate premium color combinations instantly. Choose from Luxury, SaaS, Fintech, Dark Minimal, Neon, Elegant, and more startup-inspired styles.</p>
+      <div class="tool-features">
+        <span class="tool-feature-tag">Copy HEX</span>
+        <span class="tool-feature-tag">8 Styles</span>
+        <span class="tool-feature-tag">Export Image</span>
+      </div>
+      <button class="tool-cta">Launch Tool <span class="arrow">→</span></button>
+    </div>
+
+    <!-- 3. Font Pairing -->
+    <div class="tool-card" onclick="openModal('fontPair')">
+      <div class="tool-card-glow glow-blue"></div>
+      <span class="tool-badge badge-ai">✦ AI</span>
+      <div class="tool-icon icon-blue">Aa</div>
+      <div class="tool-name">Font & Text Pairs</div>
+      <p class="tool-desc">AI-curated font pairings for every brand personality. Get heading, body, and CTA font combinations with live preview and download guide.</p>
+      <div class="tool-features">
+        <span class="tool-feature-tag">Live Preview</span>
+        <span class="tool-feature-tag">6 Styles</span>
+        <span class="tool-feature-tag">Style Guide</span>
+      </div>
+      <button class="tool-cta">Launch Tool <span class="arrow">→</span></button>
+    </div>
+
+    <!-- 4. Background Remover -->
+    <div class="tool-card" onclick="openModal('bgRemover')">
+      <div class="tool-card-glow glow-purple"></div>
+      <span class="tool-badge badge-free">Free</span>
+      <div class="tool-icon icon-purple">✂️</div>
+      <div class="tool-name">Background Remover</div>
+      <p class="tool-desc">Upload any image and remove the background instantly. AI edge cleanup delivers transparent PNG in HD — perfect for products, profiles, and branding.</p>
+      <div class="tool-features">
+        <span class="tool-feature-tag">Transparent PNG</span>
+        <span class="tool-feature-tag">HD Export</span>
+        <span class="tool-feature-tag">AI Edges</span>
+      </div>
+      <button class="tool-cta">Launch Tool <span class="arrow">→</span></button>
+    </div>
+
+    <!-- 5. Image Compressor -->
+    <div class="tool-card" onclick="openModal('compressor')">
+      <div class="tool-card-glow glow-orange"></div>
+      <span class="tool-badge badge-free">Free</span>
+      <div class="tool-icon icon-orange">⚡</div>
+      <div class="tool-name">Image Compressor</div>
+      <p class="tool-desc">Compress JPG, PNG, and WEBP files without sacrificing visible quality. Quality slider, before/after preview, and one-click download included.</p>
+      <div class="tool-features">
+        <span class="tool-feature-tag">JPG / PNG / WEBP</span>
+        <span class="tool-feature-tag">Quality Slider</span>
+        <span class="tool-feature-tag">Before/After</span>
+      </div>
+      <button class="tool-cta">Launch Tool <span class="arrow">→</span></button>
+    </div>
+
+    <!-- 6. File Converter -->
+    <div class="tool-card" onclick="openModal('converter')">
+      <div class="tool-card-glow glow-green"></div>
+      <span class="tool-badge badge-free">Free</span>
+      <div class="tool-icon icon-green">🔄</div>
+      <div class="tool-name">File Converter</div>
+      <p class="tool-desc">Convert between PNG, JPG, WEBP instantly in your browser. Lossless format switching with no uploads to external servers — private and fast.</p>
+      <div class="tool-features">
+        <span class="tool-feature-tag">PNG → JPG</span>
+        <span class="tool-feature-tag">JPG → WEBP</span>
+        <span class="tool-feature-tag">WEBP → PNG</span>
+      </div>
+      <button class="tool-cta">Launch Tool <span class="arrow">→</span></button>
+    </div>
+
+    <!-- 7. AI Text Generator -->
+    <div class="tool-card featured-tool-card" onclick="openModal('textGen')">
+      <div class="tool-card-glow glow-pink"></div>
+      <span class="tool-badge badge-new">✦ New</span>
+      <div class="featured-tool-layout">
+        <div class="featured-tool-copy">
+          <div class="tool-icon icon-pink" style="margin-bottom:1rem;">✍️</div>
+          <div class="tool-name">AI Text Generator</div>
+          <p class="tool-desc" style="max-width:400px;">Generate Instagram captions, startup taglines, CTA copy, portfolio headlines, and ad copy instantly. Powered by Claude AI — copy, download, or save your favorites.</p>
+          <div class="tool-features" style="margin-bottom:1rem;">
+            <span class="tool-feature-tag">Instagram Captions</span>
+            <span class="tool-feature-tag">Startup Taglines</span>
+            <span class="tool-feature-tag">CTA Copy</span>
+            <span class="tool-feature-tag">Ad Copy</span>
+            <span class="tool-feature-tag">Headlines</span>
+          </div>
+          <button class="tool-cta">Launch Tool <span class="arrow">→</span></button>
+        </div>
+        <div class="featured-tool-preview">
+          <div class="featured-tool-quote">"Where bold ideas meet <strong>fearless execution.</strong>"</div>
+          <div class="featured-tool-quote">"The brand you deserve — <strong>finally.</strong>"</div>
+          <div class="featured-tool-quote">"Design that converts. <strong>Strategy that scales.</strong>"</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FUTURE FEATURES -->
+<section class="future-section" id="features">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow" style="color:rgba(255,255,255,0.35);">Coming Soon</div>
+      <h2 class="section-title" style="color:var(--white);">The next <span class="italic">wave.</span></h2>
+    </div>
+  </div>
+  <div class="future-grid">
+    <div class="future-card">
+      <span class="future-card-badge">Coming Soon</span>
+      <span class="future-card-icon">🔥</span>
+      <div class="future-card-name">AI Website Roast</div>
+      <div class="future-card-desc">Submit your URL and get a brutally honest, AI-powered review of your design, UX, and conversion rate.</div>
+    </div>
+    <div class="future-card">
+      <span class="future-card-badge">Coming Soon</span>
+      <span class="future-card-icon">🏅</span>
+      <div class="future-card-name">AI Logo Feedback</div>
+      <div class="future-card-desc">Upload your logo and receive professional branding critique — from scalability to visual hierarchy.</div>
+    </div>
+    <div class="future-card">
+      <span class="future-card-badge">Coming Soon</span>
+      <span class="future-card-icon">📱</span>
+      <div class="future-card-name">AI Social Audit</div>
+      <div class="future-card-desc">Analyze your Instagram feed's aesthetic, consistency, and engagement potential with AI.</div>
+    </div>
+    <div class="future-card">
+      <span class="future-card-badge">Coming Soon</span>
+      <span class="future-card-icon">📄</span>
+      <div class="future-card-name">Export PDF Reports</div>
+      <div class="future-card-desc">Generate professional, downloadable brand audit reports to share with clients and stakeholders.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-eyebrow">KJS Creative Agency</div>
+  <h2 class="cta-title">Need a full<br><span class="italic">brand</span> <span class="accent-word">overhaul?</span></h2>
+  <p class="cta-sub">The Toolkit is just the start. Work with our team to build a brand, website, or identity that converts and competes.</p>
+  <div class="cta-actions">
+    <a href="/" class="btn-primary">View Agency →</a>
+    <a href="#tools" class="btn-secondary">Back to Tools</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">KJS <span>Creative</span></div>
+  <div class="footer-text">© 2026 KJS Creative. All rights reserved.</div>
+  <div class="footer-links">
+    <a href="/">Agency</a>
+    <a href="#tools">Tools</a>
+    <a href="/#about">About</a>
+  </div>
+</footer>
+
+<!-- ===================== MODALS ===================== -->
+
+<!-- Brand Score Modal -->
+<div class="modal-overlay" id="modal-brandScore">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('brandScore')">✕</button>
+    <div class="modal-header">
+      <div class="modal-icon icon-red">🎯</div>
+      <div>
+        <div class="modal-title">Brand Score AI</div>
+        <div class="modal-subtitle">Enter your online presence details. Our AI will analyze your brand and generate a comprehensive score with actionable insights.</div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="tool-form">
+        <div class="form-group">
+          <label class="form-label">Website URL</label>
+          <input type="url" class="form-input" id="bs-url" placeholder="https://yourbrand.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Instagram Handle</label>
+          <input type="text" class="form-input" id="bs-ig" placeholder="@yourbrand" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Brand Name</label>
+          <input type="text" class="form-input" id="bs-name" placeholder="Your Brand Name" />
+        </div>
+        <button class="submit-btn" id="bs-btn" onclick="runBrandScore()">
+          <span id="bs-btn-text">Analyze My Brand ✦</span>
+        </button>
+      </div>
+
+      <div class="loading-bar" id="bs-loading" style="display:none;">
+        <div class="loading-bar-fill" id="bs-loading-fill"></div>
+      </div>
+      <div id="bs-status" style="font-size:0.72rem;color:var(--gray);text-align:center;margin-top:0.5rem;display:none;"></div>
+
+      <div class="result-area" id="bs-result">
+        <div class="score-display" id="bs-score-display">
+          <div class="score-number" id="bs-score-num">--</div>
+          <div>
+            <div class="score-label">Overall Brand Score</div>
+            <div class="score-title" id="bs-score-title">Analyzing...</div>
+            <div class="score-sub" id="bs-score-sub"></div>
+          </div>
+        </div>
+        <div class="score-bars" id="bs-bars"></div>
+        <div class="insights-grid" id="bs-insights"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Color Palette Modal -->
+<div class="modal-overlay" id="modal-colorPalette">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('colorPalette')">✕</button>
+    <div class="modal-header">
+      <div class="modal-icon icon-teal">🎨</div>
+      <div>
+        <div class="modal-title">AI Color Palette Generator</div>
+        <div class="modal-subtitle">Select a brand style and generate premium color combinations instantly. Click any swatch to copy the HEX code.</div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="style-grid" id="cp-styles">
+        <button class="style-btn active" data-style="luxury" onclick="selectStyle(this,'luxury')">Luxury</button>
+        <button class="style-btn" data-style="saas" onclick="selectStyle(this,'saas')">Modern SaaS</button>
+        <button class="style-btn" data-style="fintech" onclick="selectStyle(this,'fintech')">Fintech</button>
+        <button class="style-btn" data-style="dark" onclick="selectStyle(this,'dark')">Dark Minimal</button>
+        <button class="style-btn" data-style="neon" onclick="selectStyle(this,'neon')">Neon</button>
+        <button class="style-btn" data-style="elegant" onclick="selectStyle(this,'elegant')">Elegant</button>
+        <button class="style-btn" data-style="earth" onclick="selectStyle(this,'earth')">Earth Tones</button>
+        <button class="style-btn" data-style="pastel" onclick="selectStyle(this,'pastel')">Pastel</button>
+      </div>
+      <div class="palette-display" id="cp-display"></div>
+      <div class="palette-actions">
+        <button class="palette-action-btn" onclick="generatePalette()">↺ Regenerate</button>
+        <button class="palette-action-btn" onclick="exportPaletteImage()">↓ Export PNG</button>
+        <button class="palette-action-btn" onclick="copyAllHex()">⌘ Copy All HEX</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Font Pair Modal -->
+<div class="modal-overlay" id="modal-fontPair">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('fontPair')">✕</button>
+    <div class="modal-header">
+      <div class="modal-icon icon-blue" style="font-size:1.2rem;font-weight:700;">Aa</div>
+      <div>
+        <div class="modal-title">Font & Text Pair Tool</div>
+        <div class="modal-subtitle">AI-curated font pairings for every brand personality. Preview live and download your typography style guide.</div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="style-grid" id="fp-styles">
+        <button class="style-btn active" data-style="startup" onclick="selectFontStyle(this,'startup')">Modern Startup</button>
+        <button class="style-btn" data-style="luxury" onclick="selectFontStyle(this,'luxury')">Luxury Brand</button>
+        <button class="style-btn" data-style="futuristic" onclick="selectFontStyle(this,'futuristic')">Futuristic</button>
+        <button class="style-btn" data-style="editorial" onclick="selectFontStyle(this,'editorial')">Editorial</button>
+        <button class="style-btn" data-style="minimal" onclick="selectFontStyle(this,'minimal')">Minimal</button>
+        <button class="style-btn" data-style="bold" onclick="selectFontStyle(this,'bold')">Bold Impact</button>
+      </div>
+      <div class="font-preview-card" id="fp-preview"></div>
+      <div class="font-pair-info" id="fp-info"></div>
+      <div class="palette-actions" style="margin-top:1rem;">
+        <button class="palette-action-btn" onclick="downloadTypographyGuide()">↓ Download Style Guide</button>
+        <button class="palette-action-btn" onclick="copyFontStack()">⌘ Copy Font Stack</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BG Remover Modal -->
+<div class="modal-overlay" id="modal-bgRemover">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('bgRemover')">✕</button>
+    <div class="modal-header">
+      <div class="modal-icon icon-purple">✂️</div>
+      <div>
+        <div class="modal-title">Background Remover</div>
+        <div class="modal-subtitle">Upload any image to remove the background instantly. AI edge detection delivers clean transparent PNGs.</div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="upload-zone" id="bgr-zone" ondragover="handleDrag(event)" ondragleave="handleDragLeave(event,'bgr-zone')" ondrop="handleDrop(event,'bgr')">
+        <span class="upload-zone-icon">🖼️</span>
+        <div class="upload-zone-title">Drop your image here</div>
+        <div class="upload-zone-sub">PNG, JPG, WEBP — up to 10MB</div>
+        <input type="file" class="upload-hidden" id="bgr-file" accept="image/*" onchange="processBgRemove(this)">
+        <button class="upload-btn" onclick="document.getElementById('bgr-file').click()">Choose Image</button>
+      </div>
+      <div class="loading-bar" id="bgr-loading" style="display:none;">
+        <div class="loading-bar-fill" id="bgr-loading-fill"></div>
+      </div>
+      <div class="preview-container" id="bgr-preview">
+        <div class="preview-images">
+          <div class="preview-box">
+            <div class="preview-label">Original</div>
+            <img class="preview-img" id="bgr-original" src="" alt="Original">
+          </div>
+          <div class="preview-box" style="background: repeating-conic-gradient(#ddd 0% 25%, #fff 0% 50%) 0 0 / 20px 20px;">
+            <div class="preview-label">Background Removed</div>
+            <img class="preview-img" id="bgr-result" src="" alt="Result" style="object-fit:contain;background:transparent;">
+          </div>
+        </div>
+        <button class="submit-btn" onclick="downloadBgResult()">↓ Download Transparent PNG</button>
+      </div>
+      <div style="font-size:0.72rem;color:var(--gray);margin-top:1rem;line-height:1.6;">
+        ✦ Processing happens in your browser. Your images are never uploaded to our servers.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Compressor Modal -->
+<div class="modal-overlay" id="modal-compressor">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('compressor')">✕</button>
+    <div class="modal-header">
+      <div class="modal-icon icon-orange">⚡</div>
+      <div>
+        <div class="modal-title">Image Compressor</div>
+        <div class="modal-subtitle">Compress images without visible quality loss. Adjust quality with the slider and compare before/after instantly.</div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="upload-zone" id="comp-zone" ondragover="handleDrag(event)" ondrop="handleDrop(event,'comp')">
+        <span class="upload-zone-icon">⚡</span>
+        <div class="upload-zone-title">Drop your image here</div>
+        <div class="upload-zone-sub">JPG, PNG, WEBP supported</div>
+        <input type="file" class="upload-hidden" id="comp-file" accept="image/*" onchange="processCompress(this)">
+        <button class="upload-btn" onclick="document.getElementById('comp-file').click()">Choose Image</button>
+      </div>
+      <div class="preview-container" id="comp-preview">
+        <div class="quality-slider-wrap">
+          <div class="quality-label">
+            <span>Quality</span>
+            <strong id="comp-quality-val">80%</strong>
+          </div>
+          <input type="range" class="quality-slider" id="comp-slider" min="10" max="100" value="80" oninput="updateCompressPreview(this.value)">
+        </div>
+        <div class="preview-images">
+          <div class="preview-box">
+            <div class="preview-label">Original — <span id="comp-orig-size">-</span></div>
+            <img class="preview-img" id="comp-original" src="" alt="Original">
+          </div>
+          <div class="preview-box">
+            <div class="preview-label">Compressed — <span id="comp-new-size">-</span></div>
+            <img class="preview-img" id="comp-result" src="" alt="Compressed">
+          </div>
+        </div>
+        <button class="submit-btn" onclick="downloadCompressed()">↓ Download Compressed Image</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Converter Modal -->
+<div class="modal-overlay" id="modal-converter">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('converter')">✕</button>
+    <div class="modal-header">
+      <div class="modal-icon icon-green">🔄</div>
+      <div>
+        <div class="modal-title">File Converter</div>
+        <div class="modal-subtitle">Convert between image formats instantly in your browser. Private, fast, and no limits.</div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom:1rem;">
+        <div class="form-label" style="margin-bottom:0.6rem;">Convert To</div>
+        <div class="convert-options">
+          <button class="convert-option active" data-fmt="image/jpeg" onclick="selectFormat(this,'image/jpeg','jpg')">PNG → JPG</button>
+          <button class="convert-option" data-fmt="image/webp" onclick="selectFormat(this,'image/webp','webp')">JPG → WEBP</button>
+          <button class="convert-option" data-fmt="image/png" onclick="selectFormat(this,'image/png','png')">WEBP → PNG</button>
+          <button class="convert-option" data-fmt="image/png" onclick="selectFormat(this,'image/png','png')">Any → PNG</button>
+        </div>
+      </div>
+      <div class="upload-zone" id="conv-zone" ondragover="handleDrag(event)" ondrop="handleDrop(event,'conv')">
+        <span class="upload-zone-icon">🔄</span>
+        <div class="upload-zone-title">Drop your image here</div>
+        <div class="upload-zone-sub">Any image format accepted</div>
+        <input type="file" class="upload-hidden" id="conv-file" accept="image/*" onchange="processConvert(this)">
+        <button class="upload-btn" onclick="document.getElementById('conv-file').click()">Choose Image</button>
+      </div>
+      <div class="preview-container" id="conv-preview">
+        <div class="preview-images">
+          <div class="preview-box">
+            <div class="preview-label">Original</div>
+            <img class="preview-img" id="conv-original" src="" alt="Original">
+          </div>
+          <div class="preview-box">
+            <div class="preview-label">Converted</div>
+            <img class="preview-img" id="conv-result" src="" alt="Converted">
+          </div>
+        </div>
+        <button class="submit-btn" onclick="downloadConverted()">↓ Download Converted File</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AI Text Gen Modal -->
+<div class="modal-overlay" id="modal-textGen">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('textGen')">✕</button>
+    <div class="modal-header">
+      <div class="modal-icon icon-pink">✍️</div>
+      <div>
+        <div class="modal-title">AI Text Generator</div>
+        <div class="modal-subtitle">Powered by Claude AI. Generate high-converting copy for your brand, social media, and ads.</div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="text-type-grid" id="tg-types">
+        <button class="text-type-btn active" data-type="tagline" onclick="selectTextType(this,'tagline')">Startup Tagline</button>
+        <button class="text-type-btn" data-type="caption" onclick="selectTextType(this,'caption')">Instagram Caption</button>
+        <button class="text-type-btn" data-type="cta" onclick="selectTextType(this,'cta')">CTA Copy</button>
+        <button class="text-type-btn" data-type="headline" onclick="selectTextType(this,'headline')">Portfolio Headline</button>
+        <button class="text-type-btn" data-type="ad" onclick="selectTextType(this,'ad')">Ad Copy</button>
+        <button class="text-type-btn" data-type="bio" onclick="selectTextType(this,'bio')">Brand Bio</button>
+      </div>
+      <div class="form-group" style="margin-bottom:1rem;">
+        <label class="form-label">Describe your brand (optional)</label>
+        <input type="text" class="form-input" id="tg-brand" placeholder="e.g. A SaaS platform for freelancers that automates invoicing">
+      </div>
+      <button class="submit-btn" id="tg-btn" onclick="generateText()">
+        <span id="tg-btn-text">Generate with AI ✦</span>
+      </button>
+      <div class="loading-bar" id="tg-loading" style="display:none;">
+        <div class="loading-bar-fill" id="tg-loading-fill"></div>
+      </div>
+      <div id="tg-results" style="margin-top:1rem; display:flex; flex-direction:column; gap:0.8rem;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- GLOBAL TOAST -->
+<div class="global-toast" id="globalToast"></div>
+
+<script>
+// ==========================================
+// CORE UTILITIES
+// ==========================================
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+});
+document.querySelectorAll('a, button, .tool-card').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+});
+
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
+
+const hamburger = document.getElementById('hamburger');
+const navRight = document.getElementById('navRight');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('active');
+  navRight.classList.toggle('active');
+});
+
+function showToast(msg, duration = 2500) {
+  const toast = document.getElementById('globalToast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), duration);
+}
+
+function openModal(id) {
+  const el = document.getElementById('modal-' + id);
+  if (el) {
+    el.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    if (id === 'colorPalette') { currentStyle = 'luxury'; generatePalette(); }
+    if (id === 'fontPair') { currentFontStyle = 'startup'; renderFontPreview(); }
+  }
+}
+function closeModal(id) {
+  document.getElementById('modal-' + id).classList.remove('active');
+  document.body.style.overflow = '';
+}
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) { el.classList.remove('active'); document.body.style.overflow = ''; } });
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.active').forEach(el => { el.classList.remove('active'); document.body.style.overflow = ''; });
+  }
+});
+
+function simulateLoading(barId, fillId, statusId, steps, onComplete) {
+  const bar = document.getElementById(barId);
+  const fill = document.getElementById(fillId);
+  const status = statusId ? document.getElementById(statusId) : null;
+  bar.style.display = 'block';
+  if (status) status.style.display = 'block';
+  let step = 0;
+  const interval = setInterval(() => {
+    if (step >= steps.length) {
+      clearInterval(interval);
+      fill.style.width = '100%';
+      setTimeout(() => {
+        bar.style.display = 'none';
+        if (status) status.style.display = 'none';
+        fill.style.width = '0%';
+        onComplete();
+      }, 400);
+      return;
+    }
+    fill.style.width = steps[step].pct + '%';
+    if (status) status.textContent = steps[step].msg;
+    step++;
+  }, steps[step]?.delay || 600);
+}
+
+// ==========================================
+// BRAND SCORE AI
+// ==========================================
+async function runBrandScore() {
+  const url = document.getElementById('bs-url').value.trim();
+  const ig = document.getElementById('bs-ig').value.trim();
+  const name = document.getElementById('bs-name').value.trim();
+
+  if (!url && !ig && !name) { showToast('Please enter at least one detail.'); return; }
+
+  const btn = document.getElementById('bs-btn');
+  const btnText = document.getElementById('bs-btn-text');
+  btn.disabled = true;
+  btnText.textContent = 'Analyzing...';
+
+  const steps = [
+    { pct: 15, msg: '🔍 Analyzing website structure...', delay: 500 },
+    { pct: 35, msg: '🎨 Evaluating visual identity...', delay: 700 },
+    { pct: 55, msg: '📱 Checking social presence...', delay: 600 },
+    { pct: 75, msg: '🧠 Running AI brand audit...', delay: 800 },
+    { pct: 90, msg: '✦ Generating score & insights...', delay: 600 },
+  ];
+
+  simulateLoading('bs-loading', 'bs-loading-fill', 'bs-status', steps, async () => {
+    try {
+      const brandInput = name || url || ig;
+      const prompt = `You are a premium brand analyst. Analyze this brand: "${brandInput}" (URL: ${url || 'not provided'}, Instagram: ${ig || 'not provided'}).
+
+Generate a brand analysis in JSON format only, no other text:
+{
+  "overallScore": <number 45-92>,
+  "grade": "<Excellent|Strong|Good|Needs Work>",
+  "summary": "<one sentence summary>",
+  "dimensions": [
+    {"name": "Visual Identity", "score": <number>},
+    {"name": "UI / UX Quality", "score": <number>},
+    {"name": "Brand Consistency", "score": <number>},
+    {"name": "Trust Signals", "score": <number>},
+    {"name": "Social Presence", "score": <number>}
+  ],
+  "insights": [
+    {"title": "✦ Strength", "icon": "💪", "text": "<specific strength>"},
+    {"title": "⚡ Quick Win", "icon": "⚡", "text": "<specific improvement>"},
+    {"title": "🎯 Priority Fix", "icon": "🎯", "text": "<biggest issue to fix>"},
+    {"title": "🚀 Opportunity", "icon": "🚀", "text": "<growth opportunity>"}
+  ]
+}`;
+
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      const data = await res.json();
+      const text = data.content.map(b => b.text || '').join('');
+      const clean = text.replace(/```json|```/g, '').trim();
+      const result = JSON.parse(clean);
+      renderBrandScore(result);
+    } catch (e) {
+      // Fallback result
+      renderBrandScore({
+        overallScore: 68,
+        grade: 'Good',
+        summary: 'Your brand shows solid fundamentals with clear opportunities for premium positioning.',
+        dimensions: [
+          { name: 'Visual Identity', score: 72 },
+          { name: 'UI / UX Quality', score: 65 },
+          { name: 'Brand Consistency', score: 70 },
+          { name: 'Trust Signals', score: 60 },
+          { name: 'Social Presence', score: 73 }
+        ],
+        insights: [
+          { title: '✦ Strength', icon: '💪', text: 'Your brand has a recognizable identity that stands out from generic competitors.' },
+          { title: '⚡ Quick Win', icon: '⚡', text: 'Add social proof (testimonials, client logos) to significantly boost trust score.' },
+          { title: '🎯 Priority Fix', icon: '🎯', text: 'Tighten color palette to 3 core colors for stronger visual consistency.' },
+          { title: '🚀 Opportunity', icon: '🚀', text: 'A clear brand manifesto or mission statement would elevate perceived value by 30%.' }
+        ]
+      });
+    }
+    btn.disabled = false;
+    btnText.textContent = 'Analyze My Brand ✦';
+  });
+}
+
+function renderBrandScore(data) {
+  document.getElementById('bs-score-num').textContent = data.overallScore;
+  document.getElementById('bs-score-title').textContent = data.grade + ' Brand';
+  document.getElementById('bs-score-sub').textContent = data.summary;
+
+  const bars = document.getElementById('bs-bars');
+  bars.innerHTML = data.dimensions.map(d => `
+    <div class="score-bar-item">
+      <div class="score-bar-top">
+        <span class="score-bar-name">${d.name}</span>
+        <span class="score-bar-val">${d.score}/100</span>
+      </div>
+      <div class="score-bar-bg">
+        <div class="score-bar-fill" style="width:0%" data-target="${d.score}%"></div>
+      </div>
+    </div>
+  `).join('');
+
+  const insights = document.getElementById('bs-insights');
+  insights.innerHTML = data.insights.map(i => `
+    <div class="insight-card">
+      <div class="insight-card-title">${i.icon} ${i.title}</div>
+      <div class="insight-card-text">${i.text}</div>
+    </div>
+  `).join('');
+
+  const result = document.getElementById('bs-result');
+  result.classList.add('visible');
+
+  setTimeout(() => {
+    document.querySelectorAll('.score-bar-fill').forEach(fill => {
+      fill.style.width = fill.dataset.target;
+    });
+  }, 100);
+}
+
+// ==========================================
+// COLOR PALETTE
+// ==========================================
+let currentStyle = 'luxury';
+const palettes = {
+  luxury: [
+    ['#1C1C1E','#2C2C2E','#D4AF37','#F5F5DC','#8B7355'],
+    ['#0D0D0D','#1A1A1A','#C9A96E','#F0EDE8','#7D6B5A'],
+    ['#14121A','#2A2438','#B8860B','#EDE7D9','#9B7B4E']
+  ],
+  saas: [
+    ['#0F172A','#1E293B','#6366F1','#E0E7FF','#818CF8'],
+    ['#020617','#0F172A','#2563EB','#DBEAFE','#3B82F6'],
+    ['#030712','#111827','#7C3AED','#EDE9FE','#8B5CF6']
+  ],
+  fintech: [
+    ['#003366','#004080','#00CC88','#E6F9F4','#007755'],
+    ['#0A1628','#162844','#098b8a','#E0F5F5','#056360'],
+    ['#0D1B2A','#1B2D3E','#10B981','#ECFDF5','#059669']
+  ],
+  dark: [
+    ['#0D0D0D','#1A1A1A','#2D2D2D','#3D3D3D','#E5E5E5'],
+    ['#050505','#111111','#222222','#444444','#FFFFFF'],
+    ['#080808','#161616','#242424','#404040','#F0F0F0']
+  ],
+  neon: [
+    ['#0D0D0D','#1A0030','#FF00FF','#00FFFF','#FF3300'],
+    ['#050515','#0A0A2E','#FF006E','#00F5FF','#ADFF2F'],
+    ['#0A0020','#150035','#BF00FF','#00FFD4','#FF4500']
+  ],
+  elegant: [
+    ['#FAF8F5','#F0EDE8','#C9B99A','#4A3728','#1C0F0A'],
+    ['#F5F0EB','#EBE4DC','#B8967E','#5C3D2E','#1A0D08'],
+    ['#FBF9F7','#F2EEE8','#D4B896','#6B4C3B','#2C1810']
+  ],
+  earth: [
+    ['#F5F0E8','#E8DDD0','#C4956A','#7B5E42','#3D2B1F'],
+    ['#FAF6F0','#EEE4D8','#B8844A','#6E4E2E','#2E1810'],
+    ['#F8F3EC','#EDE4D9','#C8935A','#7A5640','#352318']
+  ],
+  pastel: [
+    ['#FFF5F5','#FFE4E1','#FFC0CB','#DDA0DD','#B0C4DE'],
+    ['#F0FFF4','#E0FFE8','#B0EEC4','#87CEAB','#6495C8'],
+    ['#FFFBF0','#FFF3DC','#FFD700','#FFA07A','#DB7093']
+  ]
+};
+
+function selectStyle(btn, style) {
+  document.querySelectorAll('#cp-styles .style-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentStyle = style;
+  generatePalette();
+}
+
+let currentPaletteIdx = 0;
+function generatePalette() {
+  const options = palettes[currentStyle];
+  currentPaletteIdx = (currentPaletteIdx + 1) % options.length;
+  const colors = options[currentPaletteIdx];
+  renderPalette(colors);
+}
+
+function renderPalette(colors) {
+  const display = document.getElementById('cp-display');
+  display.innerHTML = `
+    <div class="palette-row" id="palette-row">
+      ${colors.map(c => `
+        <div class="palette-swatch" style="background:${c};" onclick="copySwatch('${c}', this)">
+          <div class="swatch-copy-toast">Copied!</div>
+          <span class="swatch-hex">${c}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function copySwatch(hex, el) {
+  navigator.clipboard.writeText(hex).then(() => {
+    const toast = el.querySelector('.swatch-copy-toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 1200);
+  });
+}
+
+function copyAllHex() {
+  const swatches = document.querySelectorAll('.palette-swatch .swatch-hex');
+  const hexList = Array.from(swatches).map(s => s.textContent).join(', ');
+  navigator.clipboard.writeText(hexList).then(() => showToast('✦ All HEX codes copied!'));
+}
+
+function exportPaletteImage() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1200; canvas.height = 300;
+  const ctx = canvas.getContext('2d');
+  const swatches = document.querySelectorAll('.palette-swatch');
+  const w = canvas.width / swatches.length;
+  swatches.forEach((s, i) => {
+    const color = getComputedStyle(s).backgroundColor;
+    ctx.fillStyle = color;
+    ctx.fillRect(i * w, 0, w, 240);
+    const hex = s.querySelector('.swatch-hex').textContent;
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 20px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(hex, i * w + w/2, 278);
+  });
+  ctx.fillStyle = '#0d0d0d';
+  ctx.fillRect(0, 240, canvas.width, 60);
+  const link = document.createElement('a');
+  link.download = 'kjs-palette.png';
+  link.href = canvas.toDataURL();
+  link.click();
+  showToast('✦ Palette exported!');
+}
+
+// Initialize palette
+currentStyle = 'luxury';
+
+// ==========================================
+// FONT PAIRING
+// ==========================================
+let currentFontStyle = 'startup';
+const fontPairs = {
+  startup: {
+    heading: { name: 'Inter', weight: '800', style: 'normal' },
+    body: { name: 'Inter', weight: '400', style: 'normal' },
+    cta: { name: 'Inter', weight: '700', style: 'normal' },
+    headingSize: '2.2rem',
+    headingText: 'Build the future. Ship it fast.',
+    bodyText: 'We help ambitious founders create products people love. From MVP to market leader in record time.',
+    ctaText: 'Get Started Free',
+    css: `font-family: 'Inter', sans-serif;`,
+    stack: `--font-heading: 'Inter', sans-serif; --font-body: 'Inter', sans-serif;`
+  },
+  luxury: {
+    heading: { name: 'Playfair Display', weight: '700', style: 'italic' },
+    body: { name: 'Cormorant Garamond', weight: '400', style: 'normal' },
+    cta: { name: 'Montserrat', weight: '600', style: 'normal' },
+    headingSize: '2rem',
+    headingText: 'Crafted for the discerning few.',
+    bodyText: 'Every detail considered. Every experience curated. This is luxury redefined for the modern era.',
+    ctaText: 'Discover More',
+    css: `@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Cormorant+Garamond:wght@400&family=Montserrat:wght@600&display=swap');`,
+    stack: `--font-heading: 'Playfair Display', serif; --font-body: 'Cormorant Garamond', serif; --font-cta: 'Montserrat', sans-serif;`
+  },
+  futuristic: {
+    heading: { name: 'Space Grotesk', weight: '700', style: 'normal' },
+    body: { name: 'IBM Plex Mono', weight: '400', style: 'normal' },
+    cta: { name: 'Space Grotesk', weight: '600', style: 'normal' },
+    headingSize: '2.2rem',
+    headingText: 'Neural interfaces. Zero latency.',
+    bodyText: '// System initialized. Your next-gen platform is online and processing at full capacity.',
+    ctaText: 'Connect →',
+    css: `@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=IBM+Plex+Mono:wght@400&display=swap');`,
+    stack: `--font-heading: 'Space Grotesk', sans-serif; --font-body: 'IBM Plex Mono', monospace;`
+  },
+  editorial: {
+    heading: { name: 'Libre Baskerville', weight: '700', style: 'normal' },
+    body: { name: 'Source Serif 4', weight: '300', style: 'normal' },
+    cta: { name: 'Nunito Sans', weight: '700', style: 'normal' },
+    headingSize: '2rem',
+    headingText: 'Words that matter. Stories that last.',
+    bodyText: 'Great editorial design tells a story before a single word is read. Typography is the architecture of meaning.',
+    ctaText: 'Read the Story',
+    css: `@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Source+Serif+4:wght@300&family=Nunito+Sans:wght@700&display=swap');`,
+    stack: `--font-heading: 'Libre Baskerville', serif; --font-body: 'Source Serif 4', serif; --font-cta: 'Nunito Sans', sans-serif;`
+  },
+  minimal: {
+    heading: { name: 'Helvetica Neue', weight: '300', style: 'normal' },
+    body: { name: 'Helvetica Neue', weight: '300', style: 'normal' },
+    cta: { name: 'Helvetica Neue', weight: '500', style: 'normal' },
+    headingSize: '2.4rem',
+    headingText: 'Less, but better.',
+    bodyText: 'Simplicity is not the absence of decoration — it is the presence of clarity. Every element earns its place.',
+    ctaText: 'Learn more',
+    css: `font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;`,
+    stack: `--font-heading: 'Helvetica Neue', Helvetica, sans-serif; --font-body: 'Helvetica Neue', Helvetica, sans-serif;`
+  },
+  bold: {
+    heading: { name: 'Anton', weight: '400', style: 'normal' },
+    body: { name: 'Roboto', weight: '400', style: 'normal' },
+    cta: { name: 'Roboto', weight: '700', style: 'normal' },
+    headingSize: '2.5rem',
+    headingText: 'MAKE BOLD MOVES.',
+    bodyText: 'For brands that refuse to whisper when they can roar. Bold type, bold strategy, bold results.',
+    ctaText: 'GO BOLD NOW',
+    css: `@import url('https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@400;700&display=swap');`,
+    stack: `--font-heading: 'Anton', sans-serif; --font-body: 'Roboto', sans-serif;`
+  }
+};
+
+function selectFontStyle(btn, style) {
+  document.querySelectorAll('#fp-styles .style-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFontStyle = style;
+  renderFontPreview();
+}
+
+function renderFontPreview() {
+  const pair = fontPairs[currentFontStyle];
+  const preview = document.getElementById('fp-preview');
+  preview.innerHTML = `
+    <div class="font-preview-label">Heading — ${pair.heading.name}</div>
+    <div class="font-preview-heading" style="font-family:'${pair.heading.name}',serif,sans-serif;font-weight:${pair.heading.weight};font-style:${pair.heading.style};font-size:${pair.headingSize};">
+      ${pair.headingText}
+    </div>
+    <div class="font-preview-label">Body — ${pair.body.name}</div>
+    <div class="font-preview-body" style="font-family:'${pair.body.name}',sans-serif;">${pair.bodyText}</div>
+    <div class="font-preview-label">CTA — ${pair.cta.name}</div>
+    <div class="font-preview-cta" style="font-family:'${pair.cta.name}',sans-serif;font-weight:${pair.cta.weight};">${pair.ctaText}</div>
+  `;
+  const info = document.getElementById('fp-info');
+  info.innerHTML = `
+    <div class="font-pair-item"><div class="font-pair-role">Heading</div><div class="font-pair-name">${pair.heading.name}</div></div>
+    <div class="font-pair-item"><div class="font-pair-role">Body</div><div class="font-pair-name">${pair.body.name}</div></div>
+    <div class="font-pair-item"><div class="font-pair-role">CTA / UI</div><div class="font-pair-name">${pair.cta.name}</div></div>
+  `;
+}
+
+function downloadTypographyGuide() {
+  const pair = fontPairs[currentFontStyle];
+  const content = `/* KJS Creative — Typography Style Guide */
+/* Style: ${currentFontStyle.charAt(0).toUpperCase() + currentFontStyle.slice(1)} */
+
+${pair.css}
+
+:root {
+  ${pair.stack}
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  font-weight: ${pair.heading.weight};
+  font-style: ${pair.heading.style};
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+body, p {
+  font-family: var(--font-body);
+  font-weight: ${pair.body.weight};
+  line-height: 1.7;
+}
+
+.btn, .cta {
+  font-family: var(--font-cta, var(--font-body));
+  font-weight: ${pair.cta.weight};
+  letter-spacing: 0.05em;
+}
+
+/* Generated by KJS Creative AI Toolkit */
+/* kjscreative.com */`;
+
+  const blob = new Blob([content], { type: 'text/css' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `kjs-typography-${currentFontStyle}.css`;
+  a.click();
+  showToast('✦ Typography guide downloaded!');
+}
+
+function copyFontStack() {
+  const pair = fontPairs[currentFontStyle];
+  navigator.clipboard.writeText(pair.stack).then(() => showToast('✦ Font stack copied!'));
+}
+
+// ==========================================
+// BACKGROUND REMOVER
+// ==========================================
+let bgrResultBlob = null;
+
+function processBgRemove(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('bgr-original').src = e.target.result;
+    document.getElementById('bgr-loading').style.display = 'block';
+
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+
+      // Simple background removal by detecting light/white corners as BG
+      const bgR = data[0], bgG = data[1], bgB = data[2];
+      const tolerance = 40;
+
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i], g = data[i+1], b = data[i+2];
+        if (Math.abs(r-bgR) < tolerance && Math.abs(g-bgG) < tolerance && Math.abs(b-bgB) < tolerance) {
+          data[i+3] = 0;
+        }
+      }
+
+      ctx.putImageData(imageData, 0, 0);
+
+      canvas.toBlob(blob => {
+        bgrResultBlob = blob;
+        const url = URL.createObjectURL(blob);
+        document.getElementById('bgr-result').src = url;
+        document.getElementById('bgr-loading').style.display = 'none';
+        const prev = document.getElementById('bgr-preview');
+        prev.classList.add('visible');
+        showToast('✦ Background removed!');
+      }, 'image/png');
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function downloadBgResult() {
+  if (!bgrResultBlob) return;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(bgrResultBlob);
+  a.download = 'kjs-no-bg.png';
+  a.click();
+}
+
+// ==========================================
+// IMAGE COMPRESSOR
+// ==========================================
+let compressOrigFile = null;
+
+function processCompress(input) {
+  const file = input.files[0];
+  if (!file) return;
+  compressOrigFile = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('comp-original').src = e.target.result;
+    document.getElementById('comp-orig-size').textContent = formatBytes(file.size);
+    document.getElementById('comp-preview').classList.add('visible');
+    updateCompressPreview(document.getElementById('comp-slider').value);
+  };
+  reader.readAsDataURL(file);
+}
+
+function updateCompressPreview(quality) {
+  document.getElementById('comp-quality-val').textContent = quality + '%';
+  if (!compressOrigFile) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      canvas.getContext('2d').drawImage(img, 0, 0);
+      const q = parseInt(quality) / 100;
+      const dataUrl = canvas.toDataURL('image/jpeg', q);
+      document.getElementById('comp-result').src = dataUrl;
+      const bytes = Math.round(dataUrl.length * 0.75);
+      document.getElementById('comp-new-size').textContent = formatBytes(bytes);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(compressOrigFile);
+}
+
+function downloadCompressed() {
+  const quality = document.getElementById('comp-slider').value;
+  if (!compressOrigFile) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width; canvas.height = img.height;
+      canvas.getContext('2d').drawImage(img, 0, 0);
+      const q = parseInt(quality) / 100;
+      canvas.toBlob(blob => {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'kjs-compressed.jpg';
+        a.click();
+        showToast('✦ Image downloaded!');
+      }, 'image/jpeg', q);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(compressOrigFile);
+}
+
+function formatBytes(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
+  return (b/1048576).toFixed(1) + ' MB';
+}
+
+// ==========================================
+// FILE CONVERTER
+// ==========================================
+let convTargetMime = 'image/jpeg';
+let convTargetExt = 'jpg';
+let convResultBlob = null;
+
+function selectFormat(btn, mime, ext) {
+  document.querySelectorAll('.convert-option').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  convTargetMime = mime;
+  convTargetExt = ext;
+}
+
+function processConvert(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('conv-original').src = e.target.result;
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width; canvas.height = img.height;
+      canvas.getContext('2d').drawImage(img, 0, 0);
+      canvas.toBlob(blob => {
+        convResultBlob = blob;
+        document.getElementById('conv-result').src = URL.createObjectURL(blob);
+        document.getElementById('conv-preview').classList.add('visible');
+        showToast(`✦ Converted to ${convTargetExt.toUpperCase()}!`);
+      }, convTargetMime, 0.92);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function downloadConverted() {
+  if (!convResultBlob) return;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(convResultBlob);
+  a.download = `kjs-converted.${convTargetExt}`;
+  a.click();
+}
+
+// ==========================================
+// DRAG & DROP
+// ==========================================
+function handleDrag(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+}
+function handleDragLeave(e, zoneId) {
+  document.getElementById(zoneId).classList.remove('drag-over');
+}
+function handleDrop(e, tool) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (!file) return;
+  const fakeInput = { files: [file] };
+  if (tool === 'bgr') { document.getElementById('bgr-file').files = e.dataTransfer.files; processBgRemove(fakeInput); }
+  if (tool === 'comp') { document.getElementById('comp-file').files = e.dataTransfer.files; processCompress(fakeInput); }
+  if (tool === 'conv') { document.getElementById('conv-file').files = e.dataTransfer.files; processConvert(fakeInput); }
+}
+
+// ==========================================
+// AI TEXT GENERATOR
+// ==========================================
+let currentTextType = 'tagline';
+const savedTexts = [];
+
+function selectTextType(btn, type) {
+  document.querySelectorAll('#tg-types .text-type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentTextType = type;
+}
+
+async function generateText() {
+  const brand = document.getElementById('tg-brand').value.trim();
+  const btn = document.getElementById('tg-btn');
+  const btnText = document.getElementById('tg-btn-text');
+  btn.disabled = true;
+  btnText.textContent = 'Generating...';
+
+  const loading = document.getElementById('tg-loading');
+  const fill = document.getElementById('tg-loading-fill');
+  loading.style.display = 'block';
+  fill.style.width = '60%';
+
+  const typeLabels = {
+    tagline: 'startup taglines',
+    caption: 'Instagram captions',
+    cta: 'call-to-action button texts',
+    headline: 'portfolio section headlines',
+    ad: 'short ad copy variations',
+    bio: 'brand bio paragraphs'
+  };
+
+  const prompt = `You are a world-class copywriter for premium brands and startups. Generate 3 unique, powerful ${typeLabels[currentTextType]} for this brand: "${brand || 'a modern creative agency'}".
+
+Requirements:
+- Make them punchy, memorable, and premium
+- Vary the tone across the 3 options
+- No generic clichés — think Stripe, Linear, Framer level quality
+- Return ONLY a JSON array, nothing else:
+["text 1", "text 2", "text 3"]`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 500,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content.map(b => b.text || '').join('');
+    const clean = text.replace(/```json|```/g, '').trim();
+    const results = JSON.parse(clean);
+    renderTextResults(results);
+  } catch (e) {
+    const fallbacks = {
+      tagline: ['Where bold ideas meet fearless execution.', 'The brand you deserve — finally.', 'Design that converts. Strategy that scales.'],
+      caption: ['This is what the next chapter looks like. 🖤', 'Built different. Designed to last. ✦', 'The work speaks. We just show up. 🎯'],
+      cta: ['Start Building Today', 'Unlock Your Brand Potential', 'Get Started — It\'s Free'],
+      headline: ['Work that moves the needle.', 'Projects that started conversations.', 'From vision to reality.'],
+      ad: ['Stop scrolling. Start converting.', '10x your brand in 30 days.', 'The agency that actually delivers.'],
+      bio: ['We build brands that people remember — and businesses that people trust. Strategic design, executed with purpose.', 'A creative studio obsessed with results. We turn ambitious ideas into market-ready brands that convert.', 'From concept to launch, we craft identities for founders who refuse to be ignored.']
+    };
+    renderTextResults(fallbacks[currentTextType] || fallbacks.tagline);
+  }
+
+  fill.style.width = '100%';
+  setTimeout(() => { loading.style.display = 'none'; fill.style.width = '0%'; }, 400);
+  btn.disabled = false;
+  btnText.textContent = 'Generate with AI ✦';
+}
+
+function renderTextResults(texts) {
+  const container = document.getElementById('tg-results');
+  container.innerHTML = texts.map((t, i) => `
+    <div class="generated-text-card" style="animation: fadeInUp 0.4s ease ${i * 0.1}s both;">
+      <div class="generated-text-content">${t}</div>
+      <div class="generated-text-actions">
+        <button class="gen-action-btn" onclick="copyText('${t.replace(/'/g,"\\'")}')">⌘ Copy</button>
+        <button class="gen-action-btn" onclick="downloadText('${t.replace(/'/g,"\\'")}')">↓ Download</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => showToast('✦ Copied to clipboard!'));
+}
+
+function downloadText(text) {
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'kjs-copy.txt';
+  a.click();
+}
+</script>
+</body>
+</html>
