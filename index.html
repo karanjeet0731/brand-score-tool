@@ -2147,25 +2147,9 @@ async function runBrandScore() {
 
       renderBrandScore(mapBrandScoreApiResponse(data));
     } catch (e) {
-      // Fallback result
-      renderBrandScore({
-        overallScore: 68,
-        grade: 'Good',
-        summary: 'Your brand shows solid fundamentals with clear opportunities for premium positioning.',
-        dimensions: [
-          { name: 'Visual Identity', score: 72 },
-          { name: 'UI / UX Quality', score: 65 },
-          { name: 'Brand Consistency', score: 70 },
-          { name: 'Trust Signals', score: 60 },
-          { name: 'Social Presence', score: 73 }
-        ],
-        insights: [
-          { title: '✦ Strength', icon: '💪', text: 'Your brand has a recognizable identity that stands out from generic competitors.' },
-          { title: '⚡ Quick Win', icon: '⚡', text: 'Add social proof (testimonials, client logos) to significantly boost trust score.' },
-          { title: '🎯 Priority Fix', icon: '🎯', text: 'Tighten color palette to 3 core colors for stronger visual consistency.' },
-          { title: '🚀 Opportunity', icon: '🚀', text: 'A clear brand manifesto or mission statement would elevate perceived value by 30%.' }
-        ]
-      });
+      console.error('Brand Score API failed:', e);
+      showToast('AI API failed. Check OPENAI_API_KEY on Vercel.');
+      renderBrandScore(createLocalBrandScoreFallback(brandInput));
     }
     btn.disabled = false;
     btnText.textContent = 'Analyze My Brand ✦';
@@ -2206,6 +2190,36 @@ function mapBrandScoreApiResponse(data) {
       { title: 'Tagline', icon: '🎯', text: data.taglineSuggestion || 'A concise promise-led tagline would make the brand easier to remember.' },
       { title: 'Palette', icon: '🎨', text: paletteText || 'Use a focused palette with one primary, one accent, and one neutral background color.' },
       { title: 'Fonts', icon: 'Aa', text: data.fontPairingSuggestion || 'Use a confident display face for headings with a clean sans-serif for body copy.' }
+    ]
+  };
+}
+
+function createLocalBrandScoreFallback(brandInput) {
+  const text = String(brandInput || 'brand').toLowerCase();
+  const seed = Array.from(text).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  const score = 52 + (seed % 38);
+  const clarity = Math.max(0, Math.min(100, score + ((seed % 9) - 4)));
+  const memorability = Math.max(0, Math.min(100, score + (((seed >> 1) % 11) - 5)));
+  const visual = Math.max(0, Math.min(100, score + (((seed >> 2) % 13) - 6)));
+  const positioning = Math.max(0, Math.min(100, score + (((seed >> 3) % 15) - 7)));
+  const market = Math.max(0, Math.min(100, score + (((seed >> 4) % 13) - 6)));
+
+  return {
+    overallScore: score,
+    grade: getBrandGrade(score),
+    summary: 'Backup estimate shown because the AI API request failed. Vercel env/API logs need checking.',
+    dimensions: [
+      { name: 'Brand Clarity', score: clarity },
+      { name: 'Memorability', score: memorability },
+      { name: 'Visual Direction', score: visual },
+      { name: 'Positioning', score: positioning },
+      { name: 'Market Fit', score: market }
+    ],
+    insights: [
+      { title: 'API Status', icon: '!', text: 'Live AI scoring did not respond. Add OPENAI_API_KEY in Vercel and redeploy.' },
+      { title: 'Input Read', icon: '✦', text: `Analyzed input: ${brandInput || 'No brand input found'}` },
+      { title: 'Quick Win', icon: '⚡', text: 'Use a clearer brand name, website URL, or social handle to improve the live analysis context.' },
+      { title: 'Next Step', icon: '🎯', text: 'Open /api/brand-score directly in Network logs to see the backend error response.' }
     ]
   };
 }
