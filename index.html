@@ -2112,6 +2112,7 @@ async function runBrandScore() {
   const url = document.getElementById('bs-url').value.trim();
   const ig = document.getElementById('bs-ig').value.trim();
   const name = document.getElementById('bs-name').value.trim();
+  const brandInput = name || url || ig;
 
   if (!url && !ig && !name) { showToast('Please enter at least one detail.'); return; }
 
@@ -2130,12 +2131,13 @@ async function runBrandScore() {
 
   simulateLoading('bs-loading', 'bs-loading-fill', 'bs-status', steps, async () => {
     try {
-      const brandInput = name || url || ig;
       const res = await fetch('/api/brand-score', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          brandName: brandInput
+          brandName: brandInput,
+          websiteUrl: url,
+          instagramHandle: ig
         })
       });
 
@@ -2812,38 +2814,20 @@ async function generateText() {
   loading.style.display = 'block';
   fill.style.width = '60%';
 
-  const typeLabels = {
-    tagline: 'startup taglines',
-    caption: 'Instagram captions',
-    cta: 'call-to-action button texts',
-    headline: 'portfolio section headlines',
-    ad: 'short ad copy variations',
-    bio: 'brand bio paragraphs'
-  };
-
-  const prompt = `You are a world-class copywriter for premium brands and startups. Generate 3 unique, powerful ${typeLabels[currentTextType]} for this brand: "${brand || 'a modern creative agency'}".
-
-Requirements:
-- Make them punchy, memorable, and premium
-- Vary the tone across the 3 options
-- No generic clichés — think Stripe, Linear, Framer level quality
-- Return ONLY a JSON array, nothing else:
-["text 1", "text 2", "text 3"]`;
-
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/generate-text', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 500,
-        messages: [{ role: 'user', content: prompt }]
+        brand,
+        textType: currentTextType
       })
     });
     const data = await res.json();
-    const text = data.content.map(b => b.text || '').join('');
-    const clean = text.replace(/```json|```/g, '').trim();
-    const results = JSON.parse(clean);
+    if (!res.ok) {
+      throw new Error(data.error || 'Unable to generate text');
+    }
+    const results = data.results;
     renderTextResults(results);
   } catch (e) {
     const fallbacks = {
