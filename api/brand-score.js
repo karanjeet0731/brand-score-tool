@@ -1,6 +1,7 @@
 const OPENAI_API_URL = "https://api.openai.com/v1/responses";
 const MODEL = "gpt-4.1-mini";
 const MAX_BRAND_NAME_LENGTH = 120;
+const MAX_CONTEXT_LENGTH = 300;
 const OPENAI_TIMEOUT_MS = 25000;
 
 function sendJson(res, statusCode, payload) {
@@ -99,11 +100,20 @@ module.exports = async function handler(req, res) {
   try {
     const body = await parseJsonBody(req);
     const brandName = typeof body.brandName === "string" ? body.brandName.trim() : "";
+    const websiteUrl = typeof body.websiteUrl === "string" ? body.websiteUrl.trim() : "";
+    const instagramHandle =
+      typeof body.instagramHandle === "string" ? body.instagramHandle.trim() : "";
 
     if (!brandName) {
       sendJson(res, 400, { error: "brandName is required" });
       return;
     }
+
+    const contextLines = [
+      `Primary input: ${brandName}`,
+      websiteUrl ? `Website URL: ${websiteUrl.slice(0, MAX_CONTEXT_LENGTH)}` : "",
+      instagramHandle ? `Instagram handle: ${instagramHandle.slice(0, MAX_CONTEXT_LENGTH)}` : ""
+    ].filter(Boolean);
 
     if (brandName.length > MAX_BRAND_NAME_LENGTH) {
       sendJson(res, 400, {
@@ -132,7 +142,9 @@ module.exports = async function handler(req, res) {
           },
           {
             role: "user",
-            content: `Create a brand score analysis for this brand name: ${brandName}`
+            content: `Create a brand score analysis for this brand context:\n${contextLines.join(
+              "\n"
+            )}`
           }
         ],
         text: {
